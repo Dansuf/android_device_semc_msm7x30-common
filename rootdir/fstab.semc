@@ -5,4 +5,4 @@
 
 mtd@system          /system             yaffs2      ro                         wait
 mtd@cache           /cache              yaffs2      rw,noatime,nosuid,nodev    wait
-mtd@data            /data               yaffs2      rw,noatime,nosuid,nodev    wait
+/dev/block/mmcblk0p2  /data             ext4        rw,noatime,nodev           wait
