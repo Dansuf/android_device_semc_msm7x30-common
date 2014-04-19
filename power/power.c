@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2012 The Android Open Source Project
- * Copyright (c) 2012-2013 The CyanogenMod Project
+ * Copyright (c) 2012-2014 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@
 #define BOOSTPULSE_ONDEMAND "/sys/devices/system/cpu/cpufreq/ondemand/boostpulse"
 #define BOOSTPULSE_INTERACTIVE "/sys/devices/system/cpu/cpufreq/interactive/boostpulse"
 #define BOOSTPULSE_SMARTASS2 "/sys/devices/system/cpu/cpufreq/smartass/boost_pulse"
-#define BOOSTPULSE_SMARTASSH3 "/sys/devices/system/cpu/cpufreq/smartassH3/boost_pulse"
 
 struct cm_power_module {
     struct power_module base;
@@ -121,7 +120,7 @@ static void configure_governor()
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/io_is_busy", "1");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor", "4");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/down_differential", "10");
-        sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate", "50000");
+        sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate", "75000");
 
     } else if (strncmp(governor, "interactive", 11) == 0) {
         sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/min_sample_time", "90000");
@@ -149,8 +148,6 @@ static int boostpulse_open(struct cm_power_module *cm)
                 cm->boostpulse_fd = open(BOOSTPULSE_INTERACTIVE, O_WRONLY);
             else if (strncmp(governor, "smartassV2", 10) == 0)
                 cm->boostpulse_fd = open(BOOSTPULSE_SMARTASS2, O_WRONLY);
-            else if (strncmp(governor, "SmartassH3", 10) == 0)
-                cm->boostpulse_fd = open(BOOSTPULSE_SMARTASSH3, O_WRONLY);
 
             if (cm->boostpulse_fd < 0 && !cm->boostpulse_warned) {
                 strerror_r(errno, buf, sizeof(buf));

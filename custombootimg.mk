@@ -27,12 +27,7 @@ $(INSTALLED_BOOTIMAGE_TARGET): $(PRODUCT_OUT)/kernel $(uncompressed_ramdisk) $(r
 	$(hide) rm -fr $(PRODUCT_OUT)/combinedroot
 	$(hide) mkdir -p $(PRODUCT_OUT)/combinedroot/sbin
 
-ifeq ($(BUILD_WITH_STATIC_INITLOGO),true)
 	$(hide) mv $(PRODUCT_OUT)/root/logo.rle $(PRODUCT_OUT)/combinedroot/logo.rle
-else
-	$(hide) mv $(PRODUCT_OUT)/root/bootlogo $(PRODUCT_OUT)/combinedroot
-	$(hide) rm -fr $(PRODUCT_OUT)/recovery/root/bootlogo
-endif
 	$(hide) cp $(uncompressed_ramdisk) $(PRODUCT_OUT)/combinedroot/sbin/
 	$(hide) cp $(recovery_uncompressed_ramdisk) $(PRODUCT_OUT)/combinedroot/sbin/
 	$(hide) cp $(PRODUCT_OUT)/utilities/busybox $(PRODUCT_OUT)/combinedroot/sbin/
@@ -43,7 +38,7 @@ endif
 
 	$(hide) $(MKBOOTFS) $(PRODUCT_OUT)/combinedroot/ > $(PRODUCT_OUT)/combinedroot.cpio
 	$(hide) cat $(PRODUCT_OUT)/combinedroot.cpio | lzop -9 > $(PRODUCT_OUT)/combinedroot.fs
-	$(hide) $(MKBOOTIMG) --kernel $(PRODUCT_OUT)/kernel --ramdisk $(PRODUCT_OUT)/combinedroot.fs --base $(BOARD_KERNEL_BASE) --pagesize 131072 --output $@
+	$(hide) $(MKBOOTIMG) --kernel $(PRODUCT_OUT)/kernel --ramdisk $(PRODUCT_OUT)/combinedroot.fs --base $(BOARD_KERNEL_BASE) --pagesize $(BOARD_KERNEL_PAGESIZE) -o $(INSTALLED_BOOTIMAGE_TARGET)
 
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) \

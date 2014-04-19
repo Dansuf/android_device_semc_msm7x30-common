@@ -23,8 +23,6 @@ $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 
 $(call inherit-product, device/common/gps/gps_eu_supl.mk)
 
-$(call inherit-product, device/semc/msm7x30-common/resources.mk)
-
 # These are the common hardware-specific features
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
@@ -42,7 +40,6 @@ PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/rootdir/system/etc/media_profiles.xml:system/etc/media_profiles.xml \
     $(COMMON_PATH)/rootdir/system/etc/media_codecs.xml:system/etc/media_codecs.xml \
     $(COMMON_PATH)/rootdir/system/etc/audio_policy.conf:system/etc/audio_policy.conf \
-    $(COMMON_PATH)/rootdir/system/etc/init.d/10read_ahead_kb:system/etc/init.d/10read_ahead_kb \
     $(COMMON_PATH)/rootdir/system/etc/vold.fstab:system/etc/vold.fstab \
     $(COMMON_PATH)/rootdir/fstab.semc:root/fstab.semc \
     $(COMMON_PATH)/rootdir/init.semc.rc:root/init.semc.rc \
@@ -54,6 +51,20 @@ PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/rootdir/system/usr/keylayout/msm_pmic_pwr_key.kl:system/usr/keylayout/msm_pmic_pwr_key.kl \
     $(COMMON_PATH)/rootdir/system/usr/keylayout/simple_remote.kl:system/usr/keylayout/simple_remote.kl \
     $(COMMON_PATH)/rootdir/system/usr/keylayout/simple_remote_appkey.kl:system/usr/keylayout/simple_remote_appkey.kl
+
+# Offline charging animation
+PRODUCT_COPY_FILES += \
+    $(COMMON_PATH)/animations/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT)/charging_animation_01.png:system/semc/chargemon/data/charging_animation_01.png \
+    $(COMMON_PATH)/animations/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT)/charging_animation_02.png:system/semc/chargemon/data/charging_animation_02.png \
+    $(COMMON_PATH)/animations/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT)/charging_animation_03.png:system/semc/chargemon/data/charging_animation_03.png \
+    $(COMMON_PATH)/animations/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT)/charging_animation_04.png:system/semc/chargemon/data/charging_animation_04.png \
+    $(COMMON_PATH)/animations/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT)/charging_animation_05.png:system/semc/chargemon/data/charging_animation_05.png \
+    $(COMMON_PATH)/animations/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT)/charging_animation_06.png:system/semc/chargemon/data/charging_animation_06.png \
+    $(COMMON_PATH)/animations/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT)/charging_animation_07.png:system/semc/chargemon/data/charging_animation_07.png
+
+# Boot logo
+PRODUCT_COPY_FILES += \
+    $(COMMON_PATH)/bootlogo/$(TARGET_SCREEN_WIDTH)x$(TARGET_SCREEN_HEIGHT).rle:root/logo.rle
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -113,6 +124,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.supplicant_scan_interval=15 \
     ro.com.google.locationfeatures=1 \
+    ro.com.google.clientidbase.ms=android-sonymobile \
     ro.product.locale.language=en \
     ro.product.locale.region=US \
     ro.use_data_netmgrd=true \
@@ -148,13 +160,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vold.umsdirtyratio=50
 
-# Fix camcorder
-PRODUCT_PROPERTY_OVERRIDES += \
-    debug.camcorder.disablemeta=1
-
 # Enable repeatable keys in CWM
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.cwm.enable_key_repeat=true
+
+# Prefer .tar backup format in CWM
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.cwm.prefer_tar=true
 
 # Disable excessive dalvik debug messages
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -163,6 +175,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Set default number of background apps to 10
 PRODUCT_PROPERTY_OVERRIDES += \
     sys.mem.max_hidden_apps=10
+
+# zRAM
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.zram.default=18
 
 # Extra debugging props
 PRODUCT_PROPERTY_OVERRIDES += \
